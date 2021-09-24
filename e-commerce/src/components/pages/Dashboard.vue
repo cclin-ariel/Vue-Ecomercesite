@@ -18,6 +18,14 @@ export default {
   components: {
     Sidebar,
     Navbar
+  },
+  created () {
+    const myCookie = document.cookie.replace(
+      /(?:(?:^|.*;\s*)ecToken\s*=\s*([^;]*).*$)|^.*$/,
+      '$1'
+    )
+    // console.log('myCookie', myCookie)
+    this.$http.defaults.headers.common.Authorization = myCookie
   }
 }
 </script>
