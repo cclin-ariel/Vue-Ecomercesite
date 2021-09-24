@@ -3,10 +3,12 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import bootstrap from 'bootstrap'
+
 import App from './App'
 import router from './router'
 
-Vue.use(VueAxios, axios)
+Vue.use(VueAxios, axios, bootstrap)
 axios.defaults.withCredentials = true
 Vue.config.productionTip = false
 
