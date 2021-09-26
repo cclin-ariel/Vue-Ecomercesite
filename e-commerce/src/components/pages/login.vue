@@ -54,9 +54,8 @@ export default {
       this.$http.post(api, vm.user).then(response => {
         console.log(response.data)
         if (response.data.success) {
-          const token = response.data.token
-          const expired = response.data.expired
-          document.cookie = `ecToken=${token}; expires=${new Date(expired)};`
+          const { token, expired } = response.data
+          document.cookie = `ecToken=${token}; expires=${expired}`
           vm.$router.push('/admin/products')
         }
       })
