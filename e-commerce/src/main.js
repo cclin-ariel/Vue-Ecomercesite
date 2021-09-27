@@ -10,6 +10,7 @@ import bootstrap from 'bootstrap'
 
 import App from './App'
 import router from './router'
+import './bus'
 
 Vue.use(VueAxios, axios, bootstrap)
 axios.defaults.withCredentials = true
