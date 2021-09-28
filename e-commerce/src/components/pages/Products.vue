@@ -46,7 +46,7 @@
         </tr>
       </tbody>
     </table>
-
+    <Pagination :pagination-from-products="pagination" @trigger="getProducts" />
     <!-- start of add new product modal -->
     <div
       class="modal fade"
@@ -273,10 +273,14 @@
 </template>
 <script>
 import $ from 'jquery'
+import Pagination from '@/components/Pagination'
 export default {
+  components: { Pagination },
+
   data () {
     return {
       products: [],
+      pagination: {},
       tempProduct: {},
       isNew: false,
       modalType: '',
@@ -288,14 +292,15 @@ export default {
     }
   },
   methods: {
-    getProducts () {
-      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products`
+    getProducts (page = 1) {
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products?page=${page}`
       const vm = this
       vm.isLoading = true
       this.$http.get(api).then(response => {
         console.log(response.data)
         vm.isLoading = false
         vm.products = response.data.products
+        vm.pagination = response.data.pagination
       })
     },
     openModal (isNew, item, isDelete) {
