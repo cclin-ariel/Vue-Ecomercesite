@@ -7,6 +7,7 @@
         Add New Product
       </button>
     </div>
+    <!-- start of product list -->
     <table class="table mt-4">
       <thead>
         <th class="text-center" width="110">Category</th>
@@ -21,8 +22,8 @@
         <tr v-for="item in products" :key="item.id">
           <td class="text-center">{{ item.category }}</td>
           <td>{{ item.title }}</td>
-          <td class="text-right">{{ item.origin_price }}</td>
-          <td class="text-right">{{ item.price }}</td>
+          <td class="text-right">{{ item.origin_price | currency }}</td>
+          <td class="text-right">{{ item.price | currency }}</td>
           <td class="text-center">
             <span v-if="item.is_enabled" class="text-success">Launched</span>
             <span v-else>Hidden</span>
@@ -46,6 +47,7 @@
         </tr>
       </tbody>
     </table>
+    <!-- end of product list -->
     <Pagination :pagination-from-products="pagination" @trigger="getProducts" />
     <!-- start of add new product modal -->
     <div
@@ -60,7 +62,8 @@
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="exampleModalLabel">
-              <span>新增產品</span>
+              <span v-if="isNew">新增產品</span>
+              <span v-else>編輯產品</span>
             </h5>
             <button
               type="button"
@@ -306,16 +309,16 @@ export default {
     openModal (isNew, item, isDelete) {
       if (isNew) {
         this.tempProduct = {}
-        this.isNew = true // ????
+        this.isNew = true
         this.modalType = '#productModal'
       }
       if (!isNew) {
-        this.tempProduct = Object.assign({}, item)
-        this.isNew = false // ????
+        this.tempProduct = Object.assign({}, item) // 避免傳參考而覆蓋物件的值
+        this.isNew = false
         this.modalType = '#productModal'
       }
       if (isDelete) {
-        this.tempProduct = Object.assign({}, item)
+        this.tempProduct = item // no value in this modal, no need to避免傳參考而覆蓋物件的值
         this.modalType = '#delProductModal'
       }
       $(this.modalType).modal('show')
