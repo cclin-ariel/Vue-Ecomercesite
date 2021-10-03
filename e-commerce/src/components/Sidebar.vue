@@ -21,12 +21,13 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <router-link to="/admin/orderList" class="nav-link" href="#">
             <span data-feather="file-text"></span>
             <i class="far fa-list-alt"></i>
             Order List
-          </a>
+          </router-link>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" href="#">
             <span data-feather="file-text"></span>
@@ -45,11 +46,11 @@
       </h6>
       <ul class="nav flex-column mb-2">
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <router-link to="/customer_orders" class="nav-link" href="#">
             <span data-feather="file-text"></span>
-            <i class="fas fa-shopping-cart"></i>
-            Comstomer Oerder
-          </a>
+            <i class="far fa-list-alt"></i>
+            Cumstomer Order
+          </router-link>
         </li>
       </ul>
     </div>
