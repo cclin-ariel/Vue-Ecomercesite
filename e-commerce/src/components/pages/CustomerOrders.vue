@@ -31,11 +31,21 @@
               class="btn btn-outline-secondary btn-sm"
               @click="getProduct(item.id)"
             >
-              <i class="fas fa-spinner fa-spin" v-if="status.loagingItem === item.id"></i>
+              <i
+                class="fas fa-spinner fa-spin"
+                v-if="status.loadingItem === item.id"
+              ></i>
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
-              <i class="fas fa-spinner fa-spin" v-if="status.loagingItem === item.id"></i>
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm ml-auto"
+              @click="addToCart(item.id)"
+            >
+              <i
+                class="fas fa-spinner fa-spin"
+                v-if="status.loadingItem === item.id"
+              ></i>
               加到購物車
             </button>
           </div>
@@ -100,7 +110,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              @click="addtoCart(product.id, product.num)"
+              @click="addToCart(product.id, product.num)"
             >
               <i
                 class="fas fa-spinner fa-spin"
@@ -124,7 +134,7 @@ export default {
       product: {},
       isLoading: false,
       status: {
-        loagingItem: ''
+        loadingItem: ''
       }
     }
   },
@@ -142,17 +152,42 @@ export default {
     getProduct (id) {
       const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${id}`
       const vm = this
-      vm.status.loagingItem = id
+      vm.status.loadingItem = id
       this.$http.get(api).then(response => {
         vm.product = response.data.product
         $('#productModal').modal('show')
         console.log(response.data)
-        vm.status.loagingItem = ''
+        vm.status.loadingItem = ''
+      })
+    },
+    addToCart (id, qty = 1) {
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`
+      const vm = this
+      vm.status.loadingItem = id
+      const cart = {
+        product_id: id,
+        qty
+      }
+      this.$http.post(api, { data: cart }).then(response => {
+        console.log('addToCart', response)
+        vm.status.loadingItem = ''
+        vm.getCart()
+        $('#productModal').modal('hide')
+      })
+    },
+    getCart () {
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`
+      const vm = this
+      vm.isLoading = true
+      this.$http.get(api).then(response => {
+        console.log('getCart', response)
+        vm.isLoading = false
       })
     }
   },
   created () {
     this.getProducts()
+    this.getCart()
   }
 }
 </script>
