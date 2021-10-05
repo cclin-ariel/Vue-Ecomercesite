@@ -123,6 +123,122 @@
       </div>
     </div>
     <!-- the end of single product modal -->
+    <!-- the start of cart list -->
+
+    <table class="table mt-4 mx-auto w-50 table-hover">
+      <thead>
+        <th width="50">#</th>
+        <th class="text-left">Product Name</th>
+        <th class="text-right" width="100">QTY</th>
+        <th class="text-right" width="100">Price</th>
+      </thead>
+      <tbody>
+        <tr v-for="item in carts" :key="item.id">
+          <td>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              @click="deleteProductInCart(item.product_id)"
+            >
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </td>
+          <td class="text-left">{{ item.product.title }}</td>
+          <td class="text-right">{{ item.qty }}</td>
+          <td class="text-right">{{ item.final_total | currency }}</td>
+        </tr>
+        <tr class="text-right" >
+          <td></td>
+          <td></td>
+          <td>
+            Total
+          </td>
+          <td>
+            {{ amount.total }}
+          </td>
+        </tr>
+        <tr class="text-right primary">
+          <td></td>
+          <td class="text-success">After</td>
+          <td class="text-success">
+            Discount
+          </td>
+          <td class="text-success">
+            {{ amount.final_total }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- coupon -->
+    <form class="w-50 mx-auto mt-4">
+      <div class="form-group row">
+        <input
+          type="text"
+          class="form-control col-8"
+          id="exampleInputCouponNo"
+          placeholder="Coupon No."
+        />
+        <button type="submit" class="btn btn-primary col-4">Use COUPON</button>
+      </div>
+      <div class="form-group row">
+        <input
+          type="email"
+          class="form-control col-8"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+          placeholder="name@example.com"
+        />
+        <button type="submit" class="btn btn-primary col-4">Submit</button>
+        <small id="emailHelp" class="form-text text-muted text-right"
+          >We'll never share your email with anyone else.</small
+        >
+      </div>
+    </form>
+    <!-- the end of cart list -->
+
+    <!-- start of the delete moodal -->
+    <!-- <div
+      class="modal fade"
+      id="delProductModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content border-0">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="exampleModalLabel">
+              <span>刪除產品</span>
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            是否刪除
+            <strong class="text-danger">{{ tempProduct.title }}</strong>
+            商品(刪除後將無法恢復)。
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-dismiss="modal"
+            >
+              取消
+            </button>
+            <button type="button" class="btn btn-danger" @click="deleteProduct">
+              確認刪除
+            </button>
+          </div>
+        </div>
+      </div> -->
+    <!-- end of the delete moodal -->
   </div>
 </template>
 <script>
@@ -132,6 +248,8 @@ export default {
     return {
       products: [],
       product: {},
+      carts: [],
+      amount: {},
       isLoading: false,
       status: {
         loadingItem: ''
@@ -180,9 +298,19 @@ export default {
       const vm = this
       vm.isLoading = true
       this.$http.get(api).then(response => {
-        console.log('getCart', response)
+        console.log('getCart', response.data)
         vm.isLoading = false
+        vm.amount = response.data.data
+        vm.carts = response.data.data.carts
       })
+    },
+    deleteProductInCart (id) {
+      const vm = this
+      if (id) {
+        $('#delProductModal').modal('show')
+        vm.getProducts()
+        vm.getCart()
+      }
     }
   },
   created () {
