@@ -146,26 +146,23 @@
           <td class="text-right">{{ item.qty }}</td>
           <td class="text-right">{{ item.final_total | currency }}</td>
         </tr>
-        <tr class="text-right" >
-          <td></td>
-          <td></td>
-          <td>
-            Total
-          </td>
-          <td>
-            {{ amount.total }}
-          </td>
-        </tr>
-        <tr class="text-right primary">
-          <td></td>
-          <td class="text-success">After</td>
-          <td class="text-success">
-            Discount
-          </td>
-          <td class="text-success">
-            {{ amount.final_total }}
-          </td>
-        </tr>
+        <tfoot>
+          <tr>
+            <td class="text-right" colspan="3">
+              Total
+            </td>
+            <td class="text-right">
+              {{ amount.total | currency }}
+            </td>
+          </tr>
+
+          <tr class="text-right primary" v-if="amount.final_total !== amount.total">
+            <td class="text-success text-right" colspan="3">After Discount</td>
+            <td class="text-success text-right">
+              {{ amount.final_total | currency }}
+            </td>
+          </tr>
+        </tfoot>
       </tbody>
     </table>
     <!-- coupon -->
@@ -177,7 +174,7 @@
           id="exampleInputCouponNo"
           placeholder="Coupon No."
         />
-        <button type="submit" class="btn btn-primary col-4">Use COUPON</button>
+        <button type="button" class="btn btn-primary col-4">Use COUPON</button>
       </div>
       <div class="form-group row">
         <input
@@ -187,7 +184,7 @@
           aria-describedby="emailHelp"
           placeholder="name@example.com"
         />
-        <button type="submit" class="btn btn-primary col-4">Submit</button>
+        <button type="button" class="btn btn-primary col-4">Submit</button>
         <small id="emailHelp" class="form-text text-muted text-right"
           >We'll never share your email with anyone else.</small
         >

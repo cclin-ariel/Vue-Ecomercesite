@@ -21,7 +21,7 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/admin/orderList" class="nav-link" href="#">
+          <router-link to="/admin/order_list" class="nav-link" href="#">
             <span data-feather="file-text"></span>
             <i class="far fa-list-alt"></i>
             Order List
@@ -29,11 +29,11 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <router-link to="/admin/coupon_list" class="nav-link" href="#">
             <span data-feather="file-text"></span>
             <i class="fas fa-ticket-alt"></i>
             Coupon List
-          </a>
+          </router-link>
         </li>
       </ul>
       <h6
