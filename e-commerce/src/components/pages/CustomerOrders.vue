@@ -146,23 +146,24 @@
           <td class="text-right">{{ item.qty }}</td>
           <td class="text-right">{{ item.final_total | currency }}</td>
         </tr>
-        <tfoot>
-          <tr>
-            <td class="text-right" colspan="3">
-              Total
-            </td>
-            <td class="text-right">
-              {{ amount.total | currency }}
-            </td>
-          </tr>
+        <tr>
+          <td colspan="3" class="text-right">
+            Total
+          </td>
+          <td class="text-right">
+            {{ amount.total | currency }}
+          </td>
+        </tr>
 
-          <tr class="text-right primary" v-if="amount.final_total !== amount.total">
-            <td class="text-success text-right" colspan="3">After Discount</td>
-            <td class="text-success text-right">
-              {{ amount.final_total | currency }}
-            </td>
-          </tr>
-        </tfoot>
+        <tr
+          class="text-right primary"
+          v-if="amount.final_total !== amount.total"
+        >
+          <td class="text-success text-right" colspan="3">After Discount</td>
+          <td class="text-success text-right">
+            {{ amount.final_total | currency }}
+          </td>
+        </tr>
       </tbody>
     </table>
     <!-- coupon -->

@@ -29,7 +29,7 @@
           </td>
           <td>{{ item.title }}</td>
           <td >{{ item.code }}</td>
-          <td class="text-center">{{ item.percent }}</td>
+          <td class="text-center">{{ item.percent }}%</td>
           <td class="text-center">{{ item.due_date }}</td>
           <td>
             <button
@@ -189,7 +189,7 @@
           <div class="modal-body">
             是否刪除
             <strong class="text-danger">{{ tempCoupon.title }}</strong>
-            商品(刪除後將無法恢復)。
+            Coupon(刪除後將無法恢復)。
           </div>
           <div class="modal-footer">
             <button
@@ -199,7 +199,7 @@
             >
               取消
             </button>
-            <button type="button" class="btn btn-danger" @click="deleteCoupon">
+            <button type="button" class="btn btn-danger" @click="deleteCoupon(tempCoupon.id)">
               確認刪除
             </button>
           </div>
@@ -263,7 +263,7 @@ export default {
       let httpMethod = 'post'
       const vm = this
       if (!vm.isNew) {
-        api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon/${vm.tempCoupon.code}`
+        api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon/${vm.tempCoupon.id}`
         httpMethod = 'put'
       }
       this.$http[httpMethod](api, { data: vm.tempCoupon }).then(response => {
@@ -279,11 +279,11 @@ export default {
         vm.coupons = response.data.coupons
       })
     },
-    deleteCoupon () {
-      console.log(this.tempCoupon)
-
+    deleteCoupon (id) {
       const vm = this
-      const delApi = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon/${vm.tempCoupon.code}`
+      console.log(vm.tempCoupon)
+
+      const delApi = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/coupon/${vm.tempCoupon.id}`
       this.$http.delete(delApi).then(response => {
         console.log(response.data)
         if (response.data.success) {
