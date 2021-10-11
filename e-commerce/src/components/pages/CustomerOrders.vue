@@ -1,8 +1,9 @@
 <template>
   <div>
     <loading :active.sync="isLoading" />
+
+    <!-- the start of product card -->
     <div class="row mt-4">
-      <!-- the start of product card -->
       <div class="col-md-4 mb-4" v-for="item in products" :key="item.id">
         <div class="card border-0 shadow-sm">
           <div
@@ -51,9 +52,9 @@
           </div>
         </div>
       </div>
-
-      <!-- the end of product card -->
     </div>
+    <!-- the end of product card -->
+
     <!-- the start of single product modal -->
     <div
       class="modal fade"
@@ -123,8 +124,8 @@
       </div>
     </div>
     <!-- the end of single product modal -->
-    <!-- the start of cart list -->
 
+    <!-- the start of cart list -->
     <table class="table mt-4 mx-auto w-50 table-hover">
       <thead>
         <th width="50">#</th>
@@ -137,15 +138,28 @@
           <td>
             <button
               class="btn btn-outline-danger btn-sm"
-              @click="deleteProductInCart(item.product_id)"
+              @click="deleteProductInCart(item.id)"
             >
               <i class="far fa-trash-alt"></i>
             </button>
           </td>
-          <td class="text-left">{{ item.product.title }}</td>
+          <td class="text-left">
+            {{ item.product.title }}
+            <div colspan="5" class="text-success" v-if="item.coupon">
+              Saveing
+              <strong>{{
+                (item.total - item.final_total).toFixed(0) | currency
+              }}</strong>
+              by using coupon!!
+            </div>
+          </td>
           <td class="text-right">{{ item.qty }}</td>
-          <td class="text-right">{{ item.final_total | currency }}</td>
+          <td class="text-right">
+            {{ item.final_total | currency }}
+          </td>
         </tr>
+      </tbody>
+      <tfoot>
         <tr>
           <td colspan="3" class="text-right">
             Total
@@ -164,7 +178,7 @@
             {{ amount.final_total | currency }}
           </td>
         </tr>
-      </tbody>
+      </tfoot>
     </table>
     <!-- coupon -->
     <form class="w-50 mx-auto mt-4">
@@ -174,8 +188,15 @@
           class="form-control col-8"
           id="exampleInputCouponNo"
           placeholder="Coupon No."
+          v-model="coupon_code"
         />
-        <button type="button" class="btn btn-primary col-4">Use COUPON</button>
+        <button
+          @click="addCouponCode"
+          type="button"
+          class="btn btn-primary col-4"
+        >
+          Use COUPON
+        </button>
       </div>
       <div class="form-group row">
         <input
@@ -192,6 +213,96 @@
       </div>
     </form>
     <!-- the end of cart list -->
+
+    <!-- start of order form -->
+
+    <div class="my-5 row justify-content-center">
+      <form class="col-md-6" @submit.prevent="createOrder">
+        <div class="form-group">
+          <label for="useremail">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            name="email"
+            id="useremail"
+            :class="{ 'is-invalid': errors.has('email') }"
+            v-model="form.user.email"
+            v-validate="'required|email'"
+            placeholder="請輸入 Email"
+          />
+          <span class="text-danger" v-if="errors.has('email')">
+            {{ errors.first('email') }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="username">收件人姓名</label>
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="username"
+            :class="{ 'is-invalid': errors.has('name') }"
+            v-model="form.user.name"
+            v-validate="'required'"
+            placeholder="輸入姓名"
+          />
+          <span class="text-danger" v-if="errors.has('name')"
+            >Please enter your name</span
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="usertel">收件人電話</label>
+          <input
+            type="tel"
+            class="form-control"
+            name="phone_num"
+            id="usertel"
+            :class="{ 'is-invalid': errors.has('phone_num') }"
+            v-model="form.user.tel"
+            v-validate="'required'"
+            placeholder="請輸入電話"
+          />
+          <span class="text-danger" v-if="errors.has('phone_num')"
+            >Please enter your phone number</span
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="useraddress">收件人地址</label>
+          <input
+            type="text"
+            class="form-control"
+            name="address"
+            id="useraddress"
+            :class="{ 'is-invalid': errors.has('address') }"
+            v-model="form.user.address"
+            v-validate="'required'"
+            placeholder="請輸入地址"
+          />
+          <span class="text-danger" v-if="errors.has('address')"
+            >Please enter your address</span
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="comment">留言</label>
+          <textarea
+            name=""
+            id="comment"
+            class="form-control"
+            cols="30"
+            rows="10"
+            v-model="form.message"
+          ></textarea>
+        </div>
+        <div class="text-right">
+          <button class="btn btn-danger">送出訂單</button>
+        </div>
+      </form>
+    </div>
+    <!-- end of order form -->
 
     <!-- start of the delete moodal -->
     <!-- <div
@@ -251,6 +362,15 @@ export default {
       isLoading: false,
       status: {
         loadingItem: ''
+      },
+      coupon_code: '',
+      form: {
+        user: {
+          name: '',
+          email: '',
+          tel: '',
+          address: ''
+        }
       }
     }
   },
@@ -260,7 +380,7 @@ export default {
       const vm = this
       vm.isLoading = true
       this.$http.get(api).then(response => {
-        console.log(response.data)
+        // console.log('getProducts', response.data)
         vm.isLoading = false
         vm.products = response.data.products
       })
@@ -272,7 +392,7 @@ export default {
       this.$http.get(api).then(response => {
         vm.product = response.data.product
         $('#productModal').modal('show')
-        console.log(response.data)
+        // console.log('getProduct', response.data)
         vm.status.loadingItem = ''
       })
     },
@@ -296,7 +416,7 @@ export default {
       const vm = this
       vm.isLoading = true
       this.$http.get(api).then(response => {
-        console.log('getCart', response.data)
+        // console.log('getCart', response.data)
         vm.isLoading = false
         vm.amount = response.data.data
         vm.carts = response.data.data.carts
@@ -304,11 +424,49 @@ export default {
     },
     deleteProductInCart (id) {
       const vm = this
-      if (id) {
-        $('#delProductModal').modal('show')
-        vm.getProducts()
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`
+      vm.isLoading = true
+
+      this.$http.delete(api).then(response => {
+        console.log('deleteProductInCart', response)
+        vm.isLoading = false
+
         vm.getCart()
+      })
+      // if (id) {
+      //   $('#delProductModal').modal('show')
+      //   vm.getProducts()
+      //   vm.getCart()
+      // }
+    },
+    addCouponCode () {
+      const vm = this
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/coupon`
+      const coupon = {
+        code: vm.coupon_code
       }
+      vm.isLoading = true
+      this.$http.post(api, { data: coupon }).then(response => {
+        console.log('addCouponCode', response)
+        vm.isLoading = false
+        vm.getCart()
+      })
+    },
+    createOrder () {
+      const vm = this
+      const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`
+      const order = vm.form
+      this.$validator.validate().then(valid => {
+        if (!valid) {
+          console.log('Please complete the form')
+        } else {
+          vm.isLoading = true
+          this.$http.post(api, { data: order }).then(response => {
+            console.log('createOrder', response)
+            vm.isLoading = false
+          })
+        }
+      })
     }
   },
   created () {
