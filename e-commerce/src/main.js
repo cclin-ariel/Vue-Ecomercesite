@@ -6,28 +6,37 @@ import VueAxios from 'vue-axios'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import bootstrap from 'bootstrap'
-import VeeValidate from 'vee-validate'
-// import zhTWValidate from 'vee-validate/dist/locale/zh_TW' // 中文化
-// import VueI18n from 'vue-i18n'
+import {
+  ValidationObserver,
+  ValidationProvider,
+  extend,
+  localize,
+  configure
+} from 'vee-validate'
+import TW from 'vee-validate/dist/locale/zh_TW.json'
+import * as rules from 'vee-validate/dist/rules'
 
 import App from './App'
 import router from './router'
 import './bus'
 import currencyFilter from './filters/currency'
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule])
+})
+
+localize('zh_TW', TW)
+
+Vue.component('ValidationObserver', ValidationObserver)
+Vue.component('ValidationProvider', ValidationProvider)
+
+configure({
+  classes: {
+    valid: 'is-valid',
+    invalid: 'is-invalid'
+  }
+})
 
 Vue.use(VueAxios, axios, bootstrap)
-
-// Vue.use(VueI18n)
-// const i18n = new VueI18n({
-//   locale: 'zhTWValidate'
-// })
-Vue.use(VeeValidate, {
-  events: 'input|blur'
-  // i18n,
-  // dictionary: {
-  //   zhTWValidate
-  // }
-})
 
 axios.defaults.withCredentials = true
 Vue.config.productionTip = false

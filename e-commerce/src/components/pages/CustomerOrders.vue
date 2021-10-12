@@ -217,137 +217,98 @@
     <!-- start of order form -->
 
     <div class="my-5 row justify-content-center">
-      <form class="col-md-6" @submit.prevent="createOrder">
-        <div class="form-group">
-          <label for="useremail">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            name="email"
-            id="useremail"
-            :class="{ 'is-invalid': errors.has('email') }"
-            v-model="form.user.email"
-            v-validate="'required|email'"
-            placeholder="請輸入 Email"
-          />
-          <span class="text-danger" v-if="errors.has('email')">
-            {{ errors.first('email') }}
-          </span>
-        </div>
-
-        <div class="form-group">
-          <label for="username">收件人姓名</label>
-          <input
-            type="text"
-            class="form-control"
-            name="name"
-            id="username"
-            :class="{ 'is-invalid': errors.has('name') }"
-            v-model="form.user.name"
-            v-validate="'required'"
-            placeholder="輸入姓名"
-          />
-          <span class="text-danger" v-if="errors.has('name')"
-            >Please enter your name</span
+      <validation-observer v-slot="{ invalid }" class="col-md-6">
+        <form @submit.prevent="createOrder">
+          <!-- start of email ValidationProvider -->
+          <validation-provider
+            rules="required|email"
+            v-slot="{ errors, classes }"
           >
-        </div>
+            <div class="form-group">
+              <!-- 輸入框 -->
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="Email"
+                v-model="form.user.email"
+                class="form-control"
+                :class="classes"
+              />
+              <!-- 錯誤訊息 -->
+              <span class="invalid-feedback">{{ errors[0] }}</span>
+            </div>
+          </validation-provider>
 
-        <div class="form-group">
-          <label for="usertel">收件人電話</label>
-          <input
-            type="tel"
-            class="form-control"
-            name="phone_num"
-            id="usertel"
-            :class="{ 'is-invalid': errors.has('phone_num') }"
-            v-model="form.user.tel"
-            v-validate="'required'"
-            placeholder="請輸入電話"
-          />
-          <span class="text-danger" v-if="errors.has('phone_num')"
-            >Please enter your phone number</span
-          >
-        </div>
+          <!-- end of email ValidationProvider -->
+          <validation-provider rules="required" v-slot="{ errors, classes }">
+            <div class="form-group">
+              <label for="username">收件人姓名</label>
+              <input
+                type="text"
+                class="form-control"
+                name="Name"
+                id="username"
+                :class="classes"
+                v-model="form.user.name"
+                placeholder="輸入姓名"
+              />
+              <!-- 錯誤訊息 -->
+              <span class="invalid-feedback">{{ errors[0] }}</span>
+            </div>
+          </validation-provider>
 
-        <div class="form-group">
-          <label for="useraddress">收件人地址</label>
-          <input
-            type="text"
-            class="form-control"
-            name="address"
-            id="useraddress"
-            :class="{ 'is-invalid': errors.has('address') }"
-            v-model="form.user.address"
-            v-validate="'required'"
-            placeholder="請輸入地址"
-          />
-          <span class="text-danger" v-if="errors.has('address')"
-            >Please enter your address</span
-          >
-        </div>
+          <validation-provider rules="required|numeric|min:8" v-slot="{ errors, classes }">
+            <div class="form-group">
+              <label for="usertel">收件人電話</label>
+              <input
+                type="tel"
+                class="form-control"
+                name="Phone_number"
+                id="usertel"
+                :class="classes"
+                v-model="form.user.tel"
+                placeholder="請輸入電話"
+              />
+              <!-- 錯誤訊息 -->
+              <span class="invalid-feedback">{{ errors[0] }}</span>
+            </div>
+          </validation-provider>
+          <validation-provider rules="required" v-slot="{ errors, classes }">
+            <div class="form-group">
+              <label for="useraddress">收件人地址</label>
+              <input
+                type="text"
+                class="form-control"
+                name="Address"
+                id="useraddress"
+                :class="classes"
+                v-model="form.user.address"
+                placeholder="請輸入地址"
+              />
+              <!-- 錯誤訊息 -->
+              <span class="invalid-feedback">{{ errors[0] }}</span>
+            </div>
+          </validation-provider>
 
-        <div class="form-group">
-          <label for="comment">留言</label>
-          <textarea
-            name=""
-            id="comment"
-            class="form-control"
-            cols="30"
-            rows="10"
-            v-model="form.message"
-          ></textarea>
-        </div>
-        <div class="text-right">
-          <button class="btn btn-danger">送出訂單</button>
-        </div>
-      </form>
+          <div class="form-group">
+            <label for="comment">留言</label>
+            <textarea
+              name=""
+              id="comment"
+              class="form-control"
+              cols="30"
+              rows="10"
+              v-model="form.message"
+            ></textarea>
+          </div>
+          <div class="text-right">
+            <button class="btn btn-danger" :disabled="invalid">送出訂單</button>
+          </div>
+        </form>
+      </validation-observer>
     </div>
     <!-- end of order form -->
-
-    <!-- start of the delete moodal -->
-    <!-- <div
-      class="modal fade"
-      id="delProductModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content border-0">
-          <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title" id="exampleModalLabel">
-              <span>刪除產品</span>
-            </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            是否刪除
-            <strong class="text-danger">{{ tempProduct.title }}</strong>
-            商品(刪除後將無法恢復)。
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              data-dismiss="modal"
-            >
-              取消
-            </button>
-            <button type="button" class="btn btn-danger" @click="deleteProduct">
-              確認刪除
-            </button>
-          </div>
-        </div>
-      </div> -->
-    <!-- end of the delete moodal -->
   </div>
 </template>
 <script>
@@ -456,16 +417,10 @@ export default {
       const vm = this
       const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`
       const order = vm.form
-      this.$validator.validate().then(valid => {
-        if (!valid) {
-          console.log('Please complete the form')
-        } else {
-          vm.isLoading = true
-          this.$http.post(api, { data: order }).then(response => {
-            console.log('createOrder', response)
-            vm.isLoading = false
-          })
-        }
+      vm.isLoading = true
+      this.$http.post(api, { data: order }).then(response => {
+        console.log('createOrder', response)
+        vm.isLoading = false
       })
     }
   },
