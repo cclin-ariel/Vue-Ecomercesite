@@ -8,21 +8,30 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item" v-for="order in orders" :key="order.id">
           <h4>#{{ order.num }}</h4>
-          <h6>Ordered Time: {{ new Date(order.create_at) }}</h6>
-          <h6>Order ID: {{ order.id }}</h6>
-          <h6>Payment Received: {{ order.is_paid }}</h6>
-          <h6 v-if="order.is_paid">Paid Date: {{ new Date(order.paid_date) }}</h6>
-          <h6 v-if="order.is_paid">Payment Method: {{ order.payment_method }}</h6>
-          <h6>Message: {{ order.message }}</h6>
-          <h6>Ordered Products:</h6>
-          <p v-for="product in orders.products" :key="product.id">
-            {{ product.product_id }} * {{ product.qty }}
+          <p>
+            Ordered Time:
+            {{ new Date(order.create_at * 1000).toLocaleDateString() }}
+          </p>
+          <p>Order ID: {{ order.id }}</p>
+          <p>Payment Received: {{ order.is_paid }}</p>
+          <p v-if="order.is_paid">
+            Paid Date: {{ new Date(order.paid_date*1000).toLocaleDateString() }}
+          </p>
+          <p v-if="order.is_paid">Payment Method: {{ order.payment_method }}</p>
+          <p>Message: {{ order.message }}</p>
+          <p>Ordered Products:</p>
+          <ol v-for="product in orders.products" :key="product.id">
+            <li>{{ product.product_id }} * {{ product.qty }}</li>
+          </ol>
+          <p v-if="!order.final_total">Total: {{ order.total | currency }}</p>
+          <p v-if="order.final_total">
+            Total: {{ order.final_total | currency }}
           </p>
           <h4>Customer info</h4>
-          <h6>Address: {{ orders.address }}</h6>
-          <h6>Email: {{ orders.email }}</h6>
-          <h6>Name: {{ orders.name }}</h6>
-          <h6>Tel: {{ orders.tel }}</h6>
+          <h6>Name: {{ order.user.name }}</h6>
+          <h6>Tel: {{ order.user.tel }}</h6>
+          <h6>Email: {{ order.user.email }}</h6>
+          <h6>Address: {{ order.user.address }}</h6>
         </li>
       </ul>
       <!-- the end of order -->
@@ -37,7 +46,14 @@ export default {
 
   data () {
     return {
-      orders: [],
+      orders: [
+        {
+          order: {
+            products: {},
+            user: {}
+          }
+        }
+      ],
       pagination: {},
       isLoading: false
     }
@@ -48,9 +64,9 @@ export default {
       const vm = this
       vm.isLoading = true
       this.$http.get(api).then(response => {
-        console.log(response.data)
+        console.log('getOrderList', response.data.orders)
         vm.isLoading = false
-        // vm.orders = response.data.products
+        vm.orders = response.data.orders
         vm.pagination = response.data.pagination
       })
     },

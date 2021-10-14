@@ -198,28 +198,15 @@
           Use COUPON
         </button>
       </div>
-      <div class="form-group row">
-        <input
-          type="email"
-          class="form-control col-8"
-          id="exampleInputEmail1"
-          aria-describedby="emailHelp"
-          placeholder="name@example.com"
-        />
-        <button type="button" class="btn btn-primary col-4">Submit</button>
-        <small id="emailHelp" class="form-text text-muted text-right"
-          >We'll never share your email with anyone else.</small
-        >
-      </div>
     </form>
     <!-- the end of cart list -->
 
-    <!-- start of order form -->
+    <!-- start of Form Validation -->
 
     <div class="my-5 row justify-content-center">
       <validation-observer v-slot="{ invalid }" class="col-md-6">
         <form @submit.prevent="createOrder">
-          <!-- start of email ValidationProvider -->
+          <!-- email Validation -->
           <validation-provider
             rules="required|email"
             v-slot="{ errors, classes }"
@@ -234,13 +221,14 @@
                 v-model="form.user.email"
                 class="form-control"
                 :class="classes"
+                placeholder="name@example.com"
               />
-              <!-- 錯誤訊息 -->
+              <!-- error message -->
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </div>
           </validation-provider>
 
-          <!-- end of email ValidationProvider -->
+          <!-- name Validation -->
           <validation-provider rules="required" v-slot="{ errors, classes }">
             <div class="form-group">
               <label for="username">收件人姓名</label>
@@ -251,14 +239,18 @@
                 id="username"
                 :class="classes"
                 v-model="form.user.name"
-                placeholder="輸入姓名"
+                placeholder="your name"
               />
-              <!-- 錯誤訊息 -->
+              <!-- error message -->
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </div>
           </validation-provider>
 
-          <validation-provider rules="required|numeric|min:8" v-slot="{ errors, classes }">
+          <!-- phone Validation -->
+          <validation-provider
+            rules="required|numeric|min:8"
+            v-slot="{ errors, classes }"
+          >
             <div class="form-group">
               <label for="usertel">收件人電話</label>
               <input
@@ -270,10 +262,11 @@
                 v-model="form.user.tel"
                 placeholder="請輸入電話"
               />
-              <!-- 錯誤訊息 -->
+              <!-- error message -->
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </div>
           </validation-provider>
+          <!-- address Validation -->
           <validation-provider rules="required" v-slot="{ errors, classes }">
             <div class="form-group">
               <label for="useraddress">收件人地址</label>
@@ -286,7 +279,7 @@
                 v-model="form.user.address"
                 placeholder="請輸入地址"
               />
-              <!-- 錯誤訊息 -->
+              <!-- error message -->
               <span class="invalid-feedback">{{ errors[0] }}</span>
             </div>
           </validation-provider>
@@ -308,7 +301,7 @@
         </form>
       </validation-observer>
     </div>
-    <!-- end of order form -->
+    <!-- end of Form validation -->
   </div>
 </template>
 <script>
@@ -420,6 +413,9 @@ export default {
       vm.isLoading = true
       this.$http.post(api, { data: order }).then(response => {
         console.log('createOrder', response)
+        if (response.data.success) {
+          vm.$router.push(`/customer_checkout/${response.data.orderId}`)
+        }
         vm.isLoading = false
       })
     }
