@@ -20,6 +20,7 @@ import App from './App'
 import router from './router'
 import './bus'
 import currencyFilter from './filters/currency'
+import dateFilter from './filters/date'
 Object.keys(rules).forEach(rule => {
   extend(rule, rules[rule])
 })
@@ -43,6 +44,7 @@ Vue.config.productionTip = false
 
 Vue.component('Loading', Loading)
 Vue.filter('currency', currencyFilter) // (filterName, importName)
+Vue.filter('date', dateFilter) // (filterName, importName)
 
 /* eslint-disable no-new */
 new Vue({
