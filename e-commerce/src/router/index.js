@@ -8,6 +8,8 @@ import CouponList from '@/components/pages/CouponList'
 import CustomerOrders from '@/components/pages/CustomerOrders'
 import CustomerCheckout from '@/components/pages/CustomerCheckout'
 
+import CustomerHome from '@/components/CustomerHome'
+
 Vue.use(Router)
 
 export default new Router({
@@ -62,6 +64,7 @@ export default new Router({
           component: CustomerCheckout
         }
       ]
-    }
+    },
+    { path: '/customer_home', name: 'CustomerHome', component: CustomerHome }
   ]
 })
