@@ -5,7 +5,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import bootstrap from 'bootstrap'
+// import bootstrap from 'bootstrap'
 import {
   ValidationObserver,
   ValidationProvider,
@@ -19,6 +19,7 @@ import * as rules from 'vee-validate/dist/rules'
 import App from './App'
 import router from './router'
 import './bus'
+import './assets/all.scss'
 import currencyFilter from './filters/currency'
 import dateFilter from './filters/date'
 Object.keys(rules).forEach(rule => {
@@ -37,7 +38,7 @@ configure({
   }
 })
 
-Vue.use(VueAxios, axios, bootstrap)
+Vue.use(VueAxios, axios)
 
 axios.defaults.withCredentials = true
 Vue.config.productionTip = false
