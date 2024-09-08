@@ -43,7 +43,7 @@ export default {
     return {
       user: {
         username: '',
-        passwaord: ''
+        password: ''
       }
     }
   },

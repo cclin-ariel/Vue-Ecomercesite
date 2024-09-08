@@ -1,24 +1,23 @@
 <template>
-  <div>
+  <div class="container">
     <CustomerNavbar />
     <main>
       <div
         class="
           position-relative
           overflow-hidden
-          p-3 p-md-5
-          m-md-3
           text-center
           bg-light
+          justify-content-center
+          bg-img
         "
       >
         <div class="col-md-5 p-lg-5 mx-auto my-5">
-          <h1 class="display-4 fw-normal">Punny headline</h1>
-          <p class="lead fw-normal">
-            And an even wittier subheading to boot. Jumpstart your marketing
-            efforts with this example based on Apple’s marketing pages.
+          <h1 class="display-4 fw-normal text-bgColor">2022 SPRING SALE</h1>
+          <p class="lead fw-normal text-bgColor">
+            Live your space like in game??
           </p>
-          <a class="btn btn-outline-secondary" href="#">Coming soon</a>
+          <a class="btn btn-outline-bgColor" href="#">Coming soon</a>
         </div>
         <div class="product-device shadow-sm d-none d-md-block"></div>
         <div
@@ -282,3 +281,12 @@ export default {
   }
 }
 </script>
+<style>
+.bg-img {
+  background-image: url(../photos/HomeBanner.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+</style>

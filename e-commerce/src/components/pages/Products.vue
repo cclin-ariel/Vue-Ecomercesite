@@ -270,7 +270,7 @@
           </div>
         </div>
       </div>
-      <!-- end of the delete moodal -->
+      <!-- end of the delete modal -->
     </div>
   </div>
 </template>
@@ -344,23 +344,7 @@ export default {
         //   vm.products = response.data.products
       })
     },
-    deleteProduct () {
-      console.log(this.tempProduct)
-
-      const vm = this
-      const delApi = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`
-      this.$http.delete(delApi).then(response => {
-        console.log(response.data)
-        if (response.data.success) {
-          $('#delProductModal').modal('hide')
-          vm.getProducts()
-        } else {
-          $('#delProductModal').modal('hide')
-          vm.getProducts()
-          console.log('failure')
-        }
-      })
-    },
+    
     uploadFile () {
       console.log(this)
       const uploadedFile = this.$refs.files.files[0]

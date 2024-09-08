@@ -23,7 +23,7 @@
             role="img"
             viewBox="0 0 24 24"
           >
-            <title>Product</title>
+            <title>Bims logo</title>
             <circle cx="12" cy="12" r="10" />
             <path
               d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94"
@@ -36,6 +36,7 @@
             d-none d-md-inline-block
             link-bgColor
             text-decoration-none
+            text-uppercase
           "
           href="#"
           >Sale</a
@@ -46,9 +47,10 @@
             d-none d-md-inline-block
             link-bgColor
             text-decoration-none
+            text-uppercase
           "
           href="#"
-          >Idea of Decoration</a
+          >Inspiration</a
         >
         <a
           class="
@@ -56,6 +58,7 @@
             d-none d-md-inline-block
             link-bgColor
             text-decoration-none
+            text-uppercase
           "
           href="#"
           >Product</a
@@ -66,6 +69,7 @@
             d-none d-md-inline-block
             link-bgColor
             text-decoration-none
+            text-uppercase
           "
           href="#"
           >Support</a
@@ -76,6 +80,7 @@
             d-none d-md-inline-block
             link-bgColor
             text-decoration-none
+            text-uppercase
           "
           href="#"
           >FAQ</a
@@ -86,6 +91,7 @@
             d-none d-md-inline-block
             link-bgColor
             text-decoration-none
+            text-uppercase
           "
           href="#"
           >Cart</a
